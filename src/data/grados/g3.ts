@@ -18,4 +18,19 @@ level('Par o impar','¿Cuál número es par?','logic','Paridad','8',['7','8','9'
 level('Si ocurre esto','Si llueve, llevo paraguas. Está lloviendo. ¿Qué conclusión sigue?','logic','Implicación lógica','Llevo paraguas',['No llevo paraguas','Llevo paraguas','Deja de llover'],'Aplica la regla al dato presente.'),
 level('Mayor que','¿Qué valor hace verdadera la regla x > 5?','logic','Comparación','8',['3','5','8'],'Debe ser mayor, no igual, a cinco.'),
 level('Orden de pistas','Ana llegó antes que Beto. Beto antes que Cata. ¿Quién llegó primero?','logic','Transitividad','Ana',['Ana','Beto','Cata'],'Une las dos pistas en una sola fila.'),
-level('Regla verdadera','Si una luz se enciende solo cuando pulsas el botón, ¿qué debes hacer para encenderla?','logic','Causa y efecto','Pulsar el botón',['Esperar','Pulsar el botón','Apagar el interruptor'],'Busca la acción conectada con el resultado.')]}],exam:Array.from({length:10},(_,i)=>({question:['¿Qué hace repetir 3 veces?','2 unidades × 5 saltos = ?','¿Qué es depurar?','¿Qué número es par: 7, 8 o 9?','Si llueve, llevo paraguas. Llueve: ¿qué sigue?','¿Qué significa x > 5?','Ana antes que Beto: ¿quién primero?','¿Cuántos avances hay al repetir 4?','¿Qué hace un contador?','¿Se comprueba un programa después de corregirlo?'][i],options:i%2?['Sí','No','Depende']:['Repite una acción','Borra todo','Apaga el robot'],answer:i===1?'10':i===3?'8':i===4?'Llevo paraguas':i===5?'Mayor que 5':i===6?'Ana':i===7?'4':i===8?'Cuenta pasos':i===9?'Sí':'Repite una acción'}))};
+level('Regla verdadera','Si una luz se enciende solo cuando pulsas el botón, ¿qué debes hacer para encenderla?','logic','Causa y efecto','Pulsar el botón',['Esperar','Pulsar el botón','Apagar el interruptor'],'Busca la acción conectada con el resultado.')]}],exam:[
+{question:'¿Qué programa repite un paso tres veces?',options:['repetir 2: avanzar','repetir 3: avanzar','avanzar una vez'],answer:'repetir 3: avanzar'},
+{question:'2 unidades × 5 saltos = …',options:['7','10','12'],answer:'10'},
+{question:'¿Qué significa depurar un programa?',options:['Buscar y corregir errores','Cambiar el color','Borrar todos los datos'],answer:'Buscar y corregir errores'},
+{question:'¿Cuál número es par?',options:['7','8','9'],answer:'8'},
+{question:'Si llueve, llevo paraguas. Está lloviendo. ¿Qué hago?',options:['Llevo paraguas','Lo guardo','No se puede saber'],answer:'Llevo paraguas'},
+{question:'x > 5 significa que x es…',options:['Menor que 5','Igual a 5','Mayor que 5'],answer:'Mayor que 5'},
+{question:'Ana llegó antes que Beto. ¿Quién llegó primero?',options:['Ana','Beto','No se sabe'],answer:'Ana'},
+{question:'Un bloque se repite 4 veces y contiene un avance. ¿Cuántos avances?',options:['3','4','5'],answer:'4'},
+{question:'¿Para qué sirve un contador?',options:['Llevar la cuenta','Girar el robot','Cambiar la pantalla'],answer:'Llevar la cuenta'},
+{question:'Después de reparar un programa, conviene…',options:['Probarlo de nuevo','Olvidar el objetivo','Añadir errores'],answer:'Probarlo de nuevo'}],advanced:{title:'Desafíos de laboratorio',intro:'Retos opcionales para quienes quieren ir un paso más allá.',questions:[
+{question:'Un bucle se repite 3 veces y dentro hay otro que marca 2 veces. ¿Cuántas marcas?',options:['5','6','8'],answer:'6'},
+{question:'Empiezas en 1 y sumas 2 cinco veces. ¿Dónde terminas?',options:['9','10','11'],answer:'11'},
+{question:'El contador inicia en 0. ¿Qué condición permite llegar hasta 5?',options:['contador > 5','contador < 5','contador = 8'],answer:'contador < 5'},
+{question:'Hay 3 filas con 4 casillas. ¿Cuántas parejas de fila y columna visitas?',options:['7','12','34'],answer:'12'},
+{question:'Para comprobar un error que solo aparece al llegar al puente, ¿qué conviene revisar?',options:['La condición de parada','El color del robot','El nombre del mapa'],answer:'La condición de parada'}]}};

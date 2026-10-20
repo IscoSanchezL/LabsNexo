@@ -18,4 +18,19 @@ L('Completa el contador','¿Qué número imprime el código? for n in range(3): 
 L('Condición de Python','Si edad = 12, ¿qué muestra: if edad >= 10: print("pasa")?','python','Condicional Python','pasa',['pasa','no pasa','error'],'Doce es mayor o igual que diez.',['if edad >= 10:','    print("pasa")']),
 L('Completa la suma','x=4; x=x+3; print(x). ¿Qué imprime?','python','Asignación incremental','7',['4','7','43'],'Suma tres al valor que ya tenía x.',['x = 4','x = x + 3','print(x)']),
 L('Contraseña robusta','¿Cuál contraseña es más difícil de adivinar?','cyber','Contraseñas largas y únicas','Rio!Mapa_82Luna',['12345678','Rio!Mapa_82Luna','password'],'Combina longitud, variedad y evita datos obvios.'),
-L('Mensaje sospechoso','Un mensaje pide tu contraseña para “ganar un premio”. ¿Qué haces?','cyber','Reconocer phishing','No abrir el enlace y avisar a un adulto',['Compartir la contraseña','No abrir el enlace y avisar a un adulto','Responder con tus datos'],'Los premios inesperados pueden ser engañosos.') ]}],exam:Array.from({length:10},(_,i)=>({question:['3 rondas × 2 marcas = ?','4 filas × 5 luces = ?','A Y falso produce…','falso O verdadero produce…','NO verdadero es…','¿Qué bloque acaba antes en anidamiento?','range(3) produce…','edad=12, ¿12>=10?','¿Qué contraseña es segura?','¿Qué hacer con enlace sospechoso?'][i],options:i%2?['Verdadero','Falso','No sé']:['6','8','10'],answer:i===1?'20':i===2?'Falso':i===3?'Verdadero':i===4?'Falso':i===5?'El interior':i===6?'0, 1, 2':i===7?'Sí':i===8?'Rio!Mapa_82Luna':i===9?'No abrir y avisar':'6'}))};
+L('Mensaje sospechoso','Un mensaje pide tu contraseña para “ganar un premio”. ¿Qué haces?','cyber','Reconocer phishing','No abrir el enlace y avisar a un adulto',['Compartir la contraseña','No abrir el enlace y avisar a un adulto','Responder con tus datos'],'Los premios inesperados pueden ser engañosos.') ]}],exam:[
+{question:'3 rondas con 2 marcas en cada una producen…',options:['5 marcas','6 marcas','8 marcas'],answer:'6 marcas'},
+{question:'4 filas con 5 luces cada una son…',options:['9 luces','20 luces','45 luces'],answer:'20 luces'},
+{question:'A Y falso produce…',options:['Verdadero','Falso','Una tercera opción'],answer:'Falso'},
+{question:'falso O verdadero produce…',options:['Verdadero','Falso','No se puede saber'],answer:'Verdadero'},
+{question:'NO verdadero es…',options:['Verdadero','Falso','Igual'],answer:'Falso'},
+{question:'¿Qué termina primero dentro de bucles anidados?',options:['El bucle interior','El exterior','Ambos al mismo tiempo'],answer:'El bucle interior'},
+{question:'Un bloque dentro de otro bloque está…',options:['Anidado','Borrado','Desordenado'],answer:'Anidado'},
+{question:'¿Qué operador es verdadero si las dos entradas son verdaderas?',options:['Y','O','NO'],answer:'Y'},
+{question:'Si un mensaje desconocido pide tu contraseña, debes…',options:['No compartirla y avisar a un adulto','Enviarla para revisar','Publicarla en el chat'],answer:'No compartirla y avisar a un adulto'},
+{question:'¿Qué ayuda a reconocer un enlace sospechoso?',options:['Promete un premio y pide datos','Lo envía una persona conocida','No pide ninguna información'],answer:'Promete un premio y pide datos'}],advanced:{title:'Zona avanzada · código y sistemas',intro:'Explora trazas de Python y lógica compuesta. Estos retos son opcionales.',questions:[
+{question:'¿Qué valores imprime for n in range(3): print(n)?',options:['1, 2, 3','0, 1, 2','0, 1, 2, 3'],answer:'0, 1, 2'},
+{question:'edad=12. ¿Qué muestra if edad >= 10?',options:['pasa','no pasa','error'],answer:'pasa'},
+{question:'x=4; x=x+3. ¿Qué valor tiene x al final?',options:['4','7','43'],answer:'7'},
+{question:'A=true, B=false. Evalúa NO B Y A.',options:['Verdadero','Falso','Indeterminado'],answer:'Verdadero'},
+{question:'¿Cuál contraseña de ejemplo es más difícil de adivinar?',options:['12345678','Río!Mapa_82Luna','password'],answer:'Río!Mapa_82Luna'}]}};

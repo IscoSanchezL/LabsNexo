@@ -17,4 +17,14 @@ export const g1:Grade={id:1,title:'Pequeños exploradores',world:'Jardín de se�
 {title:'Giro a la izquierda',prompt:'El robot mira al norte. ¿Qué giro lo apunta al oeste?',mechanic:'robot',answer:'⟲',concept:'Giro de 90 grados',hint:['Oeste queda a la izquierda del mapa.','Gira una vez hacia la izquierda.','Usa el giro antihorario ⟲.'],solution:'⟲'},
 {title:'Gira a la derecha',prompt:'Desde el norte, elige cómo mirar al este.',mechanic:'robot',answer:'⟳',concept:'Orientación',hint:['Este queda a la derecha.','Un giro basta.','Usa ⟳.'],solution:'⟳'},
 {title:'Dos pasos',prompt:'La meta está dos casillas delante. ¿Qué programa sirve?',mechanic:'robot',answer:'→ →',concept:'Secuencia de comandos',hint:['Cada flecha avanza una casilla.','Cuenta hasta dos.','Usa dos avances.'],solution:'→ →'},
-{title:'Vuelta completa',prompt:'Tras girar a la derecha cuatro veces, ¿hacia dónde mira?',mechanic:'robot',answer:'↑',concept:'Ciclo de orientación',hint:['Cada giro cambia un cuarto de vuelta.','Cuatro cuartos completan la vuelta.','Vuelve a mirar al norte ↑.'],solution:'↑'}]}],exam:Array.from({length:10},(_,i)=>({question:['¿Qué paso viene primero al lavarte las manos?','¿Qué figura alterna con ● en ● ▲ ● ▲?','¿Cuántos avances son dos casillas?','Después del jabón, ¿qué haces?','¿Qué giro apunta al este desde el norte?','¿Qué paso sigue al tostar el pan?','En ▲ ■ ▲, ¿qué color sigue?','¿Cuántos giros completan una vuelta?','¿Qué haces antes de llenar la mochila?','¿Una secuencia tiene pasos ordenados?'][i],options:i%2?['Sí','No','A veces']:['Mojar las manos','Enjuagar','Cerrar el grifo'],answer:i===1?'▲':i===2?'2':i===4?'⟳':i===6?'■':i===7?'4':i===9?'Sí':'Mojar las manos'}))};
+{title:'Vuelta completa',prompt:'Tras girar a la derecha cuatro veces, ¿hacia dónde mira?',mechanic:'robot',answer:'↑',concept:'Ciclo de orientación',hint:['Cada giro cambia un cuarto de vuelta.','Cuatro cuartos completan la vuelta.','Vuelve a mirar al norte ↑.'],solution:'↑'}]}],exam:[
+{question:'¿Qué paso va primero al lavarte las manos?',options:['Mojar las manos','Usar jabón','Secarlas'],answer:'Mojar las manos'},
+{question:'¿Qué figura sigue: ● ▲ ● ▲ ● …?',options:['▲','●','■'],answer:'▲'},
+{question:'Dos casillas adelante necesitan…',options:['1 avance','2 avances','3 avances'],answer:'2 avances'},
+{question:'Después del jabón, ¿qué haces?',options:['Frotar las manos','Guardar el jabón','Cerrar la mochila'],answer:'Frotar las manos'},
+{question:'Desde el norte, ¿qué giro apunta al este?',options:['Giro a la izquierda','Giro a la derecha','No girar'],answer:'Giro a la derecha'},
+{question:'Después de tostar el pan, ¿qué sigue?',options:['Untar la mermelada','Guardar el pan','Ponerlo en la nevera'],answer:'Untar la mermelada'},
+{question:'¿Qué completa ▲ ■ ▲ …?',options:['■','▲','●'],answer:'■'},
+{question:'¿Cuántos giros iguales completan una vuelta?',options:['2','3','4'],answer:'4'},
+{question:'¿Qué haces antes de llenar la mochila?',options:['Revisar qué necesitas','Cerrar la mochila','Ponértela'],answer:'Revisar qué necesitas'},
+{question:'¿Una secuencia tiene pasos en orden?',options:['Sí','No','Solo a veces'],answer:'Sí'}]};
