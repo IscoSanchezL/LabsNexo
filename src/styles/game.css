@@ -1,0 +1,79 @@
+/* ───────── Pantalla de juego con bloques ───────── */
+.bg { padding: 6px 0 40px; }
+.bg-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin: 4px 0 22px; }
+.bg-title h1 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 700; margin: 10px 0 8px; }
+.bg-title p { color: var(--muted); font-size: 16px; line-height: 1.5; max-width: 62ch; }
+
+.bg-dots { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.bg-dots li {
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  font: 700 12px var(--font-head); color: var(--faint);
+  background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.bg-dots li.is-done { background: color-mix(in srgb, var(--good) 22%, transparent); color: var(--good); box-shadow: inset 0 0 0 1.5px var(--good); }
+.bg-dots li.is-current { background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 28%, transparent); transform: scale(1.1); }
+
+.bg-grid { display: grid; grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.25fr); gap: 20px; align-items: start; }
+
+.bg-stage, .bg-editor {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--line); border-radius: var(--r-lg);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.bg-stage { padding: 14px; display: flex; flex-direction: column; gap: 12px; position: sticky; top: 76px; }
+
+.bg-canvas-wrap { position: relative; border-radius: 18px; overflow: hidden; aspect-ratio: 1 / 1; width: 100%; max-height: 66vh; margin-inline: auto; background: #0a0f26; box-shadow: inset 0 0 0 1px var(--line-strong); }
+.bg-canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.bg-ghost-tag { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; font: 600 11px var(--font-body); padding: 6px 10px; border-radius: 999px; color: #e6ebff; background: rgba(8, 12, 36, 0.72); backdrop-filter: blur(6px); box-shadow: inset 0 0 0 1px var(--line-strong); }
+
+.bg-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bg-flex { flex: 1; }
+
+.bg-msg { padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45; font-weight: 500; animation: pop 0.25s ease-out; }
+.bg-msg.is-bad { background: color-mix(in srgb, var(--bad) 16%, transparent); color: #ffd0d7; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bad) 50%, transparent); }
+.bg-msg.is-info { background: color-mix(in srgb, var(--accent) 14%, transparent); color: #ffe7b8; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+.bg-hint { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45; color: #d9e0ff; background: rgba(120, 140, 255, 0.12); box-shadow: inset 0 0 0 1px rgba(150, 165, 255, 0.35); animation: pop 0.25s ease-out; }
+.bg-hint svg { flex: none; margin-top: 2px; color: var(--accent); }
+.bg-code { margin: 0; padding: 14px 16px; border-radius: 14px; background: #060a1c; box-shadow: inset 0 0 0 1px var(--line); font: 500 13px/1.7 var(--font-mono); color: #cfe0ff; overflow: auto; max-height: 240px; white-space: pre; }
+
+.bg-editor { overflow: hidden; display: flex; flex-direction: column; }
+.bg-editor-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.bg-count { font: 700 14px var(--font-head); color: var(--ink); padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); }
+.bg-count small { font: 500 11px var(--font-body); color: var(--muted); }
+.bg-count.is-over { color: #ffd0d7; background: color-mix(in srgb, var(--bad) 28%, transparent); box-shadow: inset 0 0 0 1px var(--bad); }
+.bg-blockly { height: clamp(440px, 70vh, 780px); width: 100%; }
+
+/* Celebración */
+.bg-win { position: absolute; inset: auto 12px 12px 12px; padding: 16px 18px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; background: linear-gradient(180deg, rgba(14, 20, 54, 0.9), rgba(8, 12, 36, 0.96)); backdrop-filter: blur(10px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px var(--line-strong); animation: rise 0.45s cubic-bezier(0.2, 1.2, 0.4, 1); }
+.bg-win strong { font: 700 24px var(--font-head); }
+.bg-win-sub { font-size: 13px; color: var(--muted); }
+.bg-win-stars { display: flex; gap: 6px; font-size: 38px; line-height: 1; }
+.bg-win-stars span { color: rgba(255, 255, 255, 0.16); transform: scale(0.6); }
+.bg-win-stars span.on { color: #ffcf33; text-shadow: 0 0 22px rgba(255, 207, 51, 0.7); animation: starpop 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both; }
+.bg-reflect { display: flex; gap: 8px; align-items: flex-start; text-align: left; font-size: 13px; line-height: 1.45; color: #d9e0ff; margin-top: 4px; }
+.bg-reflect svg { flex: none; margin-top: 2px; color: var(--accent); }
+.bg-win-actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+
+@keyframes pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes starpop { from { transform: scale(0) rotate(-40deg); } to { transform: scale(1) rotate(0); } }
+
+/* ───────── Blockly: ajustes de estilo ───────── */
+.bg-blockly .blocklyText, .bg-blockly .blocklyHtmlInput { font-family: var(--font-head) !important; font-weight: 600; }
+.bg-blockly .blocklyTreeLabel { font-family: var(--font-head); font-weight: 600; font-size: 14px; }
+.bg-blockly .blocklyToolboxDiv { border-right: 1px solid var(--line); }
+.bg-blockly .blocklyFlyoutBackground { fill-opacity: 0.97; }
+.bg-blockly .blocklyScrollbarHandle { fill: #7686d6; }
+.bg-blockly .blocklyHighlightedConnectionPath { stroke: #fff; }
+.blocklyWidgetDiv .blocklyHtmlInput, .blocklyDropDownDiv { font-family: var(--font-head); }
+.blocklyDropDownDiv .blocklyMenuItem { font-family: var(--font-head); font-weight: 600; }
+
+@media (max-width: 980px) {
+  .bg-grid { grid-template-columns: 1fr; }
+  .bg-stage { position: static; }
+  .bg-canvas-wrap { max-height: 52vh; max-width: 520px; }
+  .bg-blockly { height: 62vh; }
+}
+@media (max-width: 560px) {
+  .bg-bar .btn { padding: 10px 12px; }
+}
