@@ -1,35 +1,38 @@
 import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import * as Es from 'blockly/msg/es';
+import * as En from 'blockly/msg/en';
+import { LANG } from '../i18n';
+import { t } from '../i18n/ui';
 import type { Cond, Expr, Program, Stmt } from './ast';
 import { PALETTE } from './turtle';
 import type { Tool } from '../types';
 
-Blockly.setLocale(Es as unknown as { [key: string]: string });
+Blockly.setLocale((LANG === 'en' ? En : Es) as unknown as { [key: string]: string });
 
 // ───────────────────────── Definición de bloques propios ─────────────────────────
 const swatch = (hex: string) =>
   `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"><circle cx="11" cy="11" r="9" fill="${hex}" stroke="#ffffff" stroke-width="2"/></svg>`)}`;
 const COLOR_OPTIONS = Object.entries(PALETTE).map(([name, hex]) => [{ src: swatch(hex), width: 22, height: 22, alt: name }, name]);
 
-const TURN = [['⟲ izquierda', 'L'], ['⟳ derecha', 'R']];
-const COND = [['hay camino adelante ↑', 'ahead'], ['hay camino a la izquierda ←', 'left'], ['hay camino a la derecha →', 'right']];
+const TURN = [[t('blk.left'), 'L'], [t('blk.right'), 'R']];
+const COND = [[t('blk.condAhead'), 'ahead'], [t('blk.condLeft'), 'left'], [t('blk.condRight'), 'right']];
 
 let defined = false;
 export function defineBlocks() {
   if (defined) return;
   defined = true;
   Blockly.common.defineBlocksWithJsonArray([
-    { type: 'evt_start', message0: '▶ al empezar', nextStatement: null, style: 'hat_blocks', tooltip: 'El programa empieza aquí.' },
-    { type: 'maze_move', message0: 'avanzar', previousStatement: null, nextStatement: null, style: 'move_blocks', tooltip: 'Avanza una casilla.' },
-    { type: 'maze_turn', message0: 'girar %1', args0: [{ type: 'field_dropdown', name: 'DIR', options: TURN }], previousStatement: null, nextStatement: null, style: 'turn_blocks', tooltip: 'Gira un cuarto de vuelta.' },
-    { type: 'maze_if', message0: 'si %1', args0: [{ type: 'field_dropdown', name: 'COND', options: COND }], message1: 'hacer %1', args1: [{ type: 'input_statement', name: 'DO' }], previousStatement: null, nextStatement: null, style: 'logic_blocks' },
-    { type: 'maze_ifelse', message0: 'si %1', args0: [{ type: 'field_dropdown', name: 'COND', options: COND }], message1: 'hacer %1', args1: [{ type: 'input_statement', name: 'DO' }], message2: 'si no %1', args2: [{ type: 'input_statement', name: 'ELSE' }], previousStatement: null, nextStatement: null, style: 'logic_blocks' },
-    { type: 'maze_until', message0: 'repetir hasta la meta', message1: '%1', args1: [{ type: 'input_statement', name: 'DO' }], previousStatement: null, nextStatement: null, style: 'loop_blocks', tooltip: 'Repite hasta que el robot llega a la meta.' },
-    { type: 'tur_fd', message0: 'avanzar %1', args0: [{ type: 'input_value', name: 'DIST', check: 'Number' }], inputsInline: true, previousStatement: null, nextStatement: null, style: 'move_blocks', tooltip: 'La tortuga avanza y dibuja.' },
-    { type: 'tur_turn', message0: 'girar %1 %2 grados', args0: [{ type: 'field_dropdown', name: 'DIR', options: TURN }, { type: 'input_value', name: 'ANGLE', check: 'Number' }], inputsInline: true, previousStatement: null, nextStatement: null, style: 'turn_blocks', tooltip: 'La tortuga gira.' },
-    { type: 'tur_pen', message0: 'lápiz %1', args0: [{ type: 'field_dropdown', name: 'STATE', options: [['⬇ abajo', 'down'], ['⬆ arriba', 'up']] }], previousStatement: null, nextStatement: null, style: 'pen_blocks', tooltip: 'Con el lápiz arriba no se dibuja.' },
-    { type: 'tur_color', message0: 'color %1', args0: [{ type: 'field_dropdown', name: 'C', options: COLOR_OPTIONS }], previousStatement: null, nextStatement: null, style: 'pen_blocks', tooltip: 'Cambia el color del lápiz.' },
+    { type: 'evt_start', message0: t('blk.start'), nextStatement: null, style: 'hat_blocks', tooltip: t('blk.startTip') },
+    { type: 'maze_move', message0: t('blk.move'), previousStatement: null, nextStatement: null, style: 'move_blocks', tooltip: t('blk.moveTip') },
+    { type: 'maze_turn', message0: t('blk.turn'), args0: [{ type: 'field_dropdown', name: 'DIR', options: TURN }], previousStatement: null, nextStatement: null, style: 'turn_blocks', tooltip: t('blk.turnTip') },
+    { type: 'maze_if', message0: t('blk.if'), args0: [{ type: 'field_dropdown', name: 'COND', options: COND }], message1: t('blk.do'), args1: [{ type: 'input_statement', name: 'DO' }], previousStatement: null, nextStatement: null, style: 'logic_blocks' },
+    { type: 'maze_ifelse', message0: t('blk.if'), args0: [{ type: 'field_dropdown', name: 'COND', options: COND }], message1: t('blk.do'), args1: [{ type: 'input_statement', name: 'DO' }], message2: t('blk.else'), args2: [{ type: 'input_statement', name: 'ELSE' }], previousStatement: null, nextStatement: null, style: 'logic_blocks' },
+    { type: 'maze_until', message0: t('blk.until'), message1: '%1', args1: [{ type: 'input_statement', name: 'DO' }], previousStatement: null, nextStatement: null, style: 'loop_blocks', tooltip: t('blk.untilTip') },
+    { type: 'tur_fd', message0: t('blk.fd'), args0: [{ type: 'input_value', name: 'DIST', check: 'Number' }], inputsInline: true, previousStatement: null, nextStatement: null, style: 'move_blocks', tooltip: t('blk.fdTip') },
+    { type: 'tur_turn', message0: t('blk.rot'), args0: [{ type: 'field_dropdown', name: 'DIR', options: TURN }, { type: 'input_value', name: 'ANGLE', check: 'Number' }], inputsInline: true, previousStatement: null, nextStatement: null, style: 'turn_blocks', tooltip: t('blk.rotTip') },
+    { type: 'tur_pen', message0: t('blk.pen'), args0: [{ type: 'field_dropdown', name: 'STATE', options: [[t('blk.penDown'), 'down'], [t('blk.penUp'), 'up']] }], previousStatement: null, nextStatement: null, style: 'pen_blocks', tooltip: t('blk.penTip') },
+    { type: 'tur_color', message0: t('blk.color'), args0: [{ type: 'field_dropdown', name: 'C', options: COLOR_OPTIONS }], previousStatement: null, nextStatement: null, style: 'pen_blocks', tooltip: t('blk.colorTip') },
   ]);
 }
 
@@ -123,11 +126,11 @@ export function buildToolbox(tools: Tool[], vars: string[] = []): J {
   if (!needsCategories) return { kind: 'flyoutToolbox', contents: [...moves, ...control, ...pen] };
 
   const cats: J[] = [];
-  if (moves.length) cats.push({ kind: 'category', name: 'Mover', categorystyle: 'move_category', contents: moves });
-  if (control.length) cats.push({ kind: 'category', name: 'Controlar', categorystyle: 'loop_category', contents: control });
-  if (pen.length) cats.push({ kind: 'category', name: 'Lápiz', categorystyle: 'pen_category', contents: pen });
-  if (has('vars')) cats.push({ kind: 'category', name: 'Variables', categorystyle: 'variable_category', contents: varBlocks(vars) });
-  if (has('proc')) cats.push({ kind: 'category', name: 'Funciones', categorystyle: 'procedure_category', custom: 'PROCEDURE' });
+  if (moves.length) cats.push({ kind: 'category', name: t('cat.move'), categorystyle: 'move_category', contents: moves });
+  if (control.length) cats.push({ kind: 'category', name: t('cat.control'), categorystyle: 'loop_category', contents: control });
+  if (pen.length) cats.push({ kind: 'category', name: t('cat.pen'), categorystyle: 'pen_category', contents: pen });
+  if (has('vars')) cats.push({ kind: 'category', name: t('cat.vars'), categorystyle: 'variable_category', contents: varBlocks(vars) });
+  if (has('proc')) cats.push({ kind: 'category', name: t('cat.funcs'), categorystyle: 'procedure_category', custom: 'PROCEDURE' });
   return { kind: 'categoryToolbox', contents: cats };
 }
 

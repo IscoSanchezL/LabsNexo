@@ -5,6 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { ArrowRight, Check, GripVertical, Lightbulb, CircleHelp, Eye } from 'lucide-react';
 import type { Grade, Level } from '../types';
 import { sfx } from './audio';
+import { t } from '../i18n/ui';
 import { Robot } from './Robot';
 
 export type ClassicProps = {
@@ -14,12 +15,12 @@ export type ClassicProps = {
 };
 
 const EMOJI: [RegExp, string][] = [
-  [/jab[oó]n/, '🧼'], [/comer/, '🍽️'], [/tost|pan/, '🍞'], [/mermelada|untar/, '🍓'], [/semilla/, '🌱'], [/regad|regar|agua|mojar|enjuag/, '💧'],
-  [/plant|maceta|tierra/, '🪴'], [/crezca|esper/, '☀️'], [/cepill|dientes|pasta/, '🪥'], [/horario|revisar|cuader|libro/, '📚'], [/mochila/, '🎒'],
+  [/jab[oó]n|soap/, '🧼'], [/comer|eat/, '🍽️'], [/tost|pan\b|bread/, '🍞'], [/mermelada|untar|jam|spread/, '🍓'], [/semilla|seed/, '🌱'], [/regad|regar|agua|mojar|enjuag|water|wet|rinse/, '💧'],
+  [/plant|maceta|tierra|pot|soil/, '🪴'], [/crezca|esper|grow|wait/, '☀️'], [/cepill|dientes|pasta|brush|teeth|toothpaste/, '🪥'], [/horario|revisar|cuader|libro|schedule|notebook|book/, '📚'], [/mochila|backpack/, '🎒'],
 ];
 const emojiFor = (t: string) => EMOJI.find(([r]) => r.test(t.toLowerCase()))?.[1] ?? '✨';
 
-const COLORS: Record<string, string> = { R: '#ff6b6b', A: '#4dabf7', V: '#51cf66', rojo: '#ff6b6b', azul: '#4dabf7', verde: '#51cf66', amarillo: '#ffd43b', Rojo: '#ff6b6b', Azul: '#4dabf7', Verde: '#51cf66', Amarillo: '#ffd43b' };
+const COLORS: Record<string, string> = { R: '#ff6b6b', A: '#4dabf7', V: '#51cf66', rojo: '#ff6b6b', azul: '#4dabf7', verde: '#51cf66', amarillo: '#ffd43b', B: '#4dabf7', G: '#51cf66', Rojo: '#ff6b6b', Azul: '#4dabf7', Verde: '#51cf66', Amarillo: '#ffd43b', Red: '#ff6b6b', Blue: '#4dabf7', Green: '#51cf66', Yellow: '#ffd43b' };
 const Token = ({ v }: { v: string }) => COLORS[v] ? <i className="cl-orb" style={{ background: COLORS[v] }} aria-label={v} /> : <>{v}</>;
 
 function SortCard({ id, text, index, pic }: { id: string; text: string; index: number; pic: boolean }) {
@@ -91,20 +92,20 @@ export default function ClassicGame(p: ClassicProps) {
             </DndContext>
           ) : level.mechanic === 'binary' ? (
             <div className="cl-binary">
-              <span className="eyebrow">Activa los interruptores</span>
+              <span className="eyebrow">{t('cl.switches')}</span>
               <div className="cl-switches">{bits.map((on, i) => (
-                <button key={i} className={`cl-switch ${on ? 'on' : ''}`} aria-pressed={on} aria-label={`Valor ${8 >> i}`} onClick={() => { sfx('click'); setBits(b => b.map((v, j) => j === i ? !v : v)); }}><span /><small>{8 >> i}</small></button>))}</div>
-              <div className="cl-out"><small>Salida decimal</small><b>{value}</b></div>
+                <button key={i} className={`cl-switch ${on ? 'on' : ''}`} aria-pressed={on} aria-label={t('cl.value', { n: 8 >> i })} onClick={() => { sfx('click'); setBits(b => b.map((v, j) => j === i ? !v : v)); }}><span /><small>{8 >> i}</small></button>))}</div>
+              <div className="cl-out"><small>{t('cl.output')}</small><b>{value}</b></div>
               {level.options && <div className="cl-options cl-options-mini">{options.map((o, i) => <button key={i} className={`cl-opt ${pick === o ? (fb === 'right' ? 'good' : 'bad') : ''}`} onClick={() => check(o)}><span>{String.fromCharCode(65 + i)}</span>{o}</button>)}</div>}
-              {!level.options && <button className="btn btn-primary" onClick={() => check(String(value))}>Leer salida <ArrowRight size={16} /></button>}
+              {!level.options && <button className="btn btn-primary" onClick={() => check(String(value))}>{t('cl.read')} <ArrowRight size={16} /></button>}
             </div>
           ) : level.mechanic === 'pattern' && level.sequence ? (
-            <div className="cl-pattern"><span className="eyebrow">Observa la secuencia</span>
+            <div className="cl-pattern"><span className="eyebrow">{t('cl.watch')}</span>
               <div className="cl-chips">{level.sequence.map((s, i) => <span key={i} style={{ animationDelay: `${i * 70}ms` }}><Token v={s} /></span>)}<span className="cl-missing">?</span></div></div>
           ) : level.mechanic === 'sort' ? (
-            <div className="cl-sortdemo"><span className="eyebrow">Burbuja · paso {step}</span>
+            <div className="cl-sortdemo"><span className="eyebrow">{t('cl.bubble', { n: step })}</span>
               <div className="cl-bars">{items.map((n, i) => <span key={`${i}-${n}`} style={{ height: `${28 + Number(n) * 9}px` }}>{n}</span>)}</div>
-              <button className="btn btn-ghost" onClick={sortNext}>Comparar vecinos <ArrowRight size={14} /></button></div>
+              <button className="btn btn-ghost" onClick={sortNext}>{t('cl.compare')} <ArrowRight size={14} /></button></div>
           ) : (
             <div className="cl-concept">
               <Robot variant={(grade.id + 2) % 8} mood={fb === 'right' ? 'happy' : 'think'} size={110} />
@@ -114,14 +115,14 @@ export default function ClassicGame(p: ClassicProps) {
           )}
 
           <div className="bg-bar">
-            <button className="btn btn-ghost" onClick={showHint} disabled={hint >= level.hint.length - 1}><CircleHelp size={16} /> Pista {hint + 1}/{level.hint.length}</button>
+            <button className="btn btn-ghost" onClick={showHint} disabled={hint >= level.hint.length - 1}><CircleHelp size={16} /> {t('cl.hint', { n: hint + 1, m: level.hint.length })}</button>
             <span className="bg-flex" />
-            {isSeq && <button className="btn btn-primary" onClick={() => check('seq')}>{young ? '¡Revisar orden!' : 'Comprobar orden'} <ArrowRight size={16} /></button>}
-            {p.teacher && level.solution && <button className="btn btn-ghost btn-icon" title="Ver solución" onClick={() => setHint(level.hint.length - 1)}><Eye size={16} /></button>}
+            {isSeq && <button className="btn btn-primary" onClick={() => check('seq')}>{young ? t('cl.checkEarly') : t('cl.check')} <ArrowRight size={16} /></button>}
+            {p.teacher && level.solution && <button className="btn btn-ghost btn-icon" title={t('cl.seeSol')} onClick={() => setHint(level.hint.length - 1)}><Eye size={16} /></button>}
           </div>
           {hint >= 0 && <div className="bg-hint"><Lightbulb size={16} /><span>{level.hint[hint]}</span></div>}
-          {p.teacher && p.teacher && level.solution && <div className="bg-msg is-info">Solución: {level.solution}</div>}
-          {fb === 'wrong' && <div className="bg-msg is-bad">{young ? 'Casi. Mira la pista y prueba otra vez.' : 'Buen intento. Observa la pista y prueba otra vez.'}</div>}
+          {p.teacher && p.teacher && level.solution && <div className="bg-msg is-info">{t('cl.solution', { s: level.solution })}</div>}
+          {fb === 'wrong' && <div className="bg-msg is-bad">{young ? t('cl.wrongEarly') : t('cl.wrong')}</div>}
         </div>
 
         <aside className="cl-aside">
@@ -132,18 +133,18 @@ export default function ClassicGame(p: ClassicProps) {
               </button>))}
             </div>
           )}
-          {!showOptions && <div className="cl-idea"><span className="eyebrow">Idea clave</span><b>{level.concept}</b><p>{young ? 'Mira las pistas y prueba una idea.' : 'Explora, construye una respuesta y comprueba qué ocurre.'}</p></div>}
+          {!showOptions && <div className="cl-idea"><span className="eyebrow">{t('cl.keyIdea')}</span><b>{level.concept}</b><p>{young ? t('cl.ideaEarly') : t('cl.idea')}</p></div>}
         </aside>
       </div>
 
       {done && (
         <div className="cl-done">
           <div className="bg-win-stars">{[1, 2, 3].map(n => <span key={n} className={n <= stars ? 'on' : ''} style={{ animationDelay: `${n * 140}ms` }}>★</span>)}</div>
-          <strong>{young ? '¡Lo lograste!' : '¡Exacto! Buena estrategia.'}</strong>
-          <p className="bg-reflect"><Lightbulb size={16} />{young ? '¿Qué te ayudó? ¿Qué probarías ahora?' : '¿Qué estrategia usaste? ¿Qué cambiarías si lo intentaras de nuevo?'}</p>
+          <strong>{young ? t('cl.rightEarly') : t('cl.right')}</strong>
+          <p className="bg-reflect"><Lightbulb size={16} />{young ? t('cl.reflectEarly') : t('cl.reflect')}</p>
           <div className="bg-win-actions">
-            <button className="btn btn-ghost" onClick={p.onBack}>Volver al mapa</button>
-            {p.hasNext && <button className="btn btn-primary" onClick={p.onNext}>Siguiente reto <ArrowRight size={16} /></button>}
+            <button className="btn btn-ghost" onClick={p.onBack}>{t('bg.toMap')}</button>
+            {p.hasNext && <button className="btn btn-primary" onClick={p.onNext}>{t('bg.next')} <ArrowRight size={16} /></button>}
           </div>
         </div>
       )}

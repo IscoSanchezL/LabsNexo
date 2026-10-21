@@ -1,0 +1,96 @@
+import type { GradeText } from '../content';
+
+const CHECK = 'Check which fact changes and which condition is met.';
+
+export const en4: GradeText = {
+  title: 'Decision Architects', world: 'Systems Workshop',
+  modules: {
+    'Condiciones del camino': {
+      title: 'Conditions on the path', intro: 'With “if… then… else…” the robot decides by looking at the path.',
+      levels: [
+        { title: 'If you cannot move forward', prompt: 'Make the robot move forward while it can and turn when it meets a wall.', concept: 'Deciding with if / else',
+          hint: ['Repeat until you reach the goal.', 'If there is a path ahead: move. Otherwise: turn right.', 'Repeat until the goal: if path ahead → move forward, else → right.'] },
+        { title: 'Turns both ways', prompt: 'Now the path turns right and also left.', concept: 'Nested decisions',
+          hint: ['First ask if there is a path ahead.', 'If there is not, ask if there is a path to the left.', 'Ahead → move; otherwise, left → turn left; otherwise, right.'] },
+        { title: 'The long path', prompt: 'The same program works for longer paths. Try it!', concept: 'One rule for any path',
+          hint: ['Think about the rule from the previous challenge.', 'A good program does not depend on how many steps there are.', 'Repeat until the goal with the same decisions.'] },
+        { title: 'Left hand', prompt: 'A maze with dead ends. Trick: always follow the wall with your left hand!', concept: 'An algorithm for mazes',
+          hint: ['If there is a path to the left, it is always best to take it.', 'If there is not, move forward; if you cannot, turn right.', 'If left: turn left and move; otherwise, if ahead: move; otherwise, right.'] },
+        { title: 'Final maze', prompt: 'The big maze. Your left-hand rule solves it.', concept: 'Reusing a good idea',
+          hint: ['It is the same trick as the previous challenge.', 'Only the size of the maze changes.', 'If left: turn left and move; otherwise, if ahead: move; otherwise, right.'] },
+      ],
+    },
+    'Variables en cajas': {
+      title: 'Variables in boxes', intro: 'A variable is a named box that holds a number. Change it and the whole drawing changes.',
+      levels: [
+        { title: 'My first box', prompt: 'Store the side length in the box “side” and use it to draw a square.', concept: 'Storing a value',
+          hint: ['First: “set side to 80”.', 'Inside the loop, put the box “side” in “move forward”.', 'Set side to 80; repeat 4: move forward (side), right 90.'] },
+        { title: 'Change the box', prompt: 'The ghost square is smaller. Change only the number in the box.', concept: 'One change, many effects',
+          hint: ['The program is already built.', 'Look at the number the box “side” holds.', 'Change it to 60.'] },
+        { title: 'Square spiral', prompt: 'Make the box grow on every turn to draw a spiral.', concept: 'Changing a variable',
+          hint: ['Start with a small side: 20.', 'On each turn, besides moving and turning, add 12 to the side.', 'Set side 20; repeat 8: move forward side, right 90, change side by 12.'] },
+        { title: 'The star', prompt: 'A five-pointed star: the turning angle is in a box.', concept: 'Variables for angles',
+          hint: ['Create a box called “angle” with the value 144.', 'Repeat 5 times: move forward 100 and turn by the box “angle”.', 'Set angle 144; repeat 5: move forward 100, right (angle).'] },
+        { title: 'Growing staircase', prompt: 'Climb a staircase whose steps grow.', concept: 'Growing patterns',
+          hint: ['Each step goes up “side”, turns right, moves “side” and faces up again.', 'At the end of each step add 8 to the box.', 'Set side 10; repeat 6: move forward side, right 90, move forward side, left 90, change side by 8.'] },
+      ],
+    },
+    'Lógica aplicada': {
+      title: 'Applied logic', intro: 'Combine rules and conditions to solve situations.',
+      levels: [
+        { title: 'Lab access', prompt: 'Entry is allowed if student=true AND glasses=true. Both are true.', concept: 'AND conjunction',
+          options: ['Access allowed', 'Access denied', 'A condition is missing'], answer: 'Access allowed',
+          hint: ['With AND, both conditions must be true.', CHECK, 'The correct answer is Access allowed.'], solution: 'Access allowed' },
+        { title: 'Security alarm', prompt: 'The alarm sounds if door open OR window open. Only the window is open.', concept: 'OR disjunction',
+          options: ['The alarm sounds', 'It does not sound', 'The door closes'], answer: 'The alarm sounds',
+          hint: ['With OR, it is enough for one condition to be true.', CHECK, 'The correct answer is The alarm sounds.'], solution: 'The alarm sounds' },
+        { title: 'It is not night', prompt: 'night=false. What is the result of NOT night?', concept: 'Logical negation',
+          options: ['True', 'False', 'Cannot tell'], answer: 'True',
+          hint: ['NOT flips true and false.', CHECK, 'The correct answer is True.'], solution: 'True' },
+        { title: 'Comparing ages', prompt: 'Which expression is true if age=10?', concept: 'Relational operators',
+          options: ['age < 8', 'age = 9', 'age >= 10'], answer: 'age >= 10',
+          hint: ['Ten is equal to or greater than ten.', CHECK, 'The correct answer is age >= 10.'], solution: 'age >= 10' },
+        { title: 'Delivery rule', prompt: 'Deliver if ready=true AND paid=true. Paid is false. Is it delivered?', concept: 'Evaluating a compound condition',
+          options: ['Yes', 'No', 'Only if it is ready'], answer: 'No',
+          hint: ['In an AND rule, one false condition stops the result.', CHECK, 'The correct answer is No.'], solution: 'No' },
+      ],
+    },
+    'Variables en acción': {
+      title: 'Variables in action', intro: 'Change the number in a box and the whole shape changes size.',
+      levels: [
+        { title: 'Adjustable triangle', prompt: 'Store the side in the box “side” and draw a triangle.', concept: 'Variable for the size',
+          hint: ['First: “set side to 70”.', 'Repeat 3 times: move forward (side) and turn 120.', 'Set side 70; repeat 3: move forward side, right 120.'] },
+        { title: 'Crooked hexagon', prompt: 'The shape is left open. Which number is wrong?', concept: 'Debugging a counter',
+          hint: ['Count the sides the program draws.', 'A hexagon has six sides.', 'Change the 5 to a 6.'] },
+        { title: 'Rectangle with two boxes', prompt: 'Use one box for the width and another for the height.', concept: 'Several variables',
+          hint: ['Set “width” to 100 and “height” to 50.', 'Repeat twice: move forward width, turn, move forward height, turn.', 'Repeat 2: move forward width, right 90, move forward height, right 90.'] },
+        { title: 'Triangular spiral', prompt: 'Make the side grow on every turn.', concept: 'Changing a variable',
+          hint: ['Start with a small side: 20.', 'Move forward, turn 120 and add 10 to “side”.', 'Set side 20; repeat 8: move forward side, right 120, change side by 10.'] },
+        { title: 'Equal steps', prompt: 'A staircase where all the steps are the same size.', concept: 'One value, many uses',
+          hint: ['Store the step size in “step”.', 'Each step uses “step” twice.', 'Set step 30; repeat 4: move forward step, right 90, move forward step, left 90.'] },
+      ],
+    },
+  },
+  exam: [
+    { question: 'If the card is valid, the door opens. It is valid. What happens?', options: ['The door opens', 'The door closes', 'Nothing changes'], answer: 'The door opens' },
+    { question: 'points=7; points+2 gives…', options: ['7', '9', '72'], answer: '9' },
+    { question: 'Battery=15. If battery<20, what action follows?', options: ['Recharge', 'Move forward', 'Turn off the sensor'], answer: 'Recharge' },
+    { question: 'x=4 and y=6. What is x+y?', options: ['2', '10', '46'], answer: '10' },
+    { question: 'A AND B. A is true and B is false. The output is…', options: ['True', 'False', 'Depends on the color'], answer: 'False' },
+    { question: 'In A OR B, what is enough for the output to be true?', options: ['One input is true', 'Both are false', 'There are no inputs'], answer: 'One input is true' },
+    { question: 'NOT false is…', options: ['True', 'False', 'Equal to zero'], answer: 'True' },
+    { question: 'There is no key; the rule says to look for it. Which branch do you follow?', options: ['Look for the key', 'Open the chest', 'Close the door'], answer: 'Look for the key' },
+    { question: 'speed=2 and then speed=5. What is the current value?', options: ['2', '5', '7'], answer: '5' },
+    { question: 'If age=10, is age >= 10 true?', options: ['Yes', 'No', 'Cannot compare'], answer: 'Yes' },
+  ],
+  advanced: {
+    title: 'Advanced logic room', intro: 'Combine several conditions and justify each step.',
+    questions: [
+      { question: 'A=true, B=false. Evaluate NOT B AND A.', options: ['True', 'False', 'Undetermined'], answer: 'True' },
+      { question: 'The alarm sounds if (door OR window) AND system active. Only the window and the system are active.', options: ['It sounds', 'It does not sound', 'The door is missing'], answer: 'It sounds' },
+      { question: 'Access requires student AND glasses. Only student is true.', options: ['Access allowed', 'Access denied', 'Sometimes allowed'], answer: 'Access denied' },
+      { question: 'If x changes from 3 to 3+2 before evaluating x>4, what is the result?', options: ['True', 'False', 'Undefined'], answer: 'True' },
+      { question: 'A double condition has an AND branch and an OR branch. What helps you read it?', options: ['Solving each group in parentheses', 'Renaming the variables', 'Always reading it right to left'], answer: 'Solving each group in parentheses' },
+    ],
+  },
+};

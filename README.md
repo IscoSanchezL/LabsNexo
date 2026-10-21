@@ -18,6 +18,9 @@ npm run build        # genera docs/
 - `src/data/grados/`: módulos clásicos, pruebas finales y zonas avanzadas.
 - `src/app/`: aplicación (entrada, inicio, mapa, pruebas, modo docente), retos clásicos, audio y almacenamiento.
 
+## Idiomas
+La plataforma está en español e inglés (selector ES/EN arriba a la derecha; `?lang=en` fuerza el idioma). Textos de interfaz en `src/i18n/ui.ts`; traducciones de retos, pruebas y zonas avanzadas en `src/i18n/en/`. `npm run test:retos` exige que todo reto nuevo tenga su traducción y que su solución funcione en los dos idiomas.
+
 ## Dominio propio
 Añade un archivo `public/CNAME` con el subdominio (por ejemplo `labsnexo.iscosanchez.com`), crea en el DNS un
 registro CNAME de `labsnexo` hacia `iscosanchezl.github.io` y activa «Enforce HTTPS» en Settings → Pages.

@@ -1,4 +1,5 @@
-export const avatarNames = ['Chispa', 'Brújula', 'Luna', 'Rayo', 'Pixel', 'Nube', 'Órbita', 'Byte'];
+import { pick } from '../i18n';
+export const avatarNames = pick(['Chispa', 'Brújula', 'Luna', 'Rayo', 'Pixel', 'Nube', 'Órbita', 'Byte'], ['Spark', 'Compass', 'Luna', 'Bolt', 'Pixel', 'Cloud', 'Orbit', 'Byte']);
 const HUES = [38, 200, 280, 50, 160, 215, 330, 120];
 
 /** Avatares robot: cada uno con silueta y color propios. */
