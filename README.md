@@ -19,5 +19,5 @@ npm run build        # genera docs/
 - `src/app/`: aplicación (entrada, inicio, mapa, pruebas, modo docente), retos clásicos, audio y almacenamiento.
 
 ## Dominio propio
-Añade un archivo `public/CNAME` con el subdominio (por ejemplo `lab.iscosanchez.com`), crea en el DNS un
-registro CNAME de `lab` hacia `iscosanchezl.github.io` y activa «Enforce HTTPS» en Settings → Pages.
+Añade un archivo `public/CNAME` con el subdominio (por ejemplo `labsnexo.iscosanchez.com`), crea en el DNS un
+registro CNAME de `labsnexo` hacia `iscosanchezl.github.io` y activa «Enforce HTTPS» en Settings → Pages.
