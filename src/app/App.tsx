@@ -3,17 +3,26 @@ import { ArrowLeft, ArrowRight, Check, DoorOpen, Eye, Fullscreen, Lightbulb, Loc
 import { grades } from '../data/grados';
 import { tallerLibre } from '../data/retos';
 import { worldVisuals } from '../worlds';
-import { CONFIG } from '../config';
+import { CLOUD, CONFIG } from '../config';
 import type { Grade, Level } from '../types';
-import { cargarProgreso, emptyProgress, guardarProgreso, levelKey, obtenerPerfil, type Profile, type Progress } from './store';
+import { cargarProgreso, emptyProgress, guardarProgreso, levelKey, mergeProgress, obtenerPerfil, type Profile, type Progress } from './store';
 import { isMuted, setMuted as setAudioMuted, sfx } from './audio';
 import { Robot, avatarNames } from './Robot';
 import Backdrop from './Backdrop';
 import ClassicGame from './Classic';
 
 const BlockGame = lazy(() => import('../play/BlockGame'));
+const Panel = lazy(() => import('./Panel'));
 
-type Page = 'entry' | 'home' | 'map' | 'level' | 'exam' | 'advanced' | 'free';
+const cloudError = (e: unknown) => {
+  const m = String((e as Error)?.message ?? e);
+  if (m.includes('not-school')) return 'Entra con tu cuenta educativa del colegio.';
+  if (m.includes('popup-closed') || m.includes('cancelled')) return 'Entrada cancelada.';
+  if (m.includes('popup-blocked')) return 'El navegador bloqueó la ventana de Google. Permite las ventanas emergentes.';
+  return 'No pudimos conectar con Google. Revisa la conexión e inténtalo de nuevo.';
+};
+
+type Page = 'entry' | 'home' | 'map' | 'level' | 'exam' | 'advanced' | 'free' | 'panel';
 
 const isBlock = (l: Level) => l.mechanic === 'maze' || l.mechanic === 'turtle';
 const unit = (g: Grade) => (g.id <= 2 ? 'aventuras' : 'expediciones');
@@ -73,14 +82,63 @@ export default function App() {
     return () => { window.removeEventListener('hashchange', pop); window.removeEventListener('keydown', key); };
   }, [profile, page, teacherOpen, confirmExit, go]);
 
-  const save = (p: Progress) => { setProgress(p); guardarProgreso(p, profile); };
+  const syncTimer = React.useRef<number>();
+  const pushCloud = (p: Progress, pr: Profile | null) => {
+    if (!pr?.uid || pr.grade < CLOUD.minGrade || teacher) return;
+    window.clearTimeout(syncTimer.current);
+    syncTimer.current = window.setTimeout(async () => {
+      try {
+        const cloud = await import('../cloud/cloud');
+        const u = cloud.currentUser() ?? await cloud.authReady();
+        if (!u || u.uid !== pr.uid) { notify('Entra de nuevo con Google para guardar en la nube.'); return; }
+        await cloud.saveStudent(u, pr, p);
+      } catch { notify('No se pudo guardar en la nube. Se guardó en este dispositivo.'); }
+    }, 800);
+  };
+  const save = (p: Progress) => { setProgress(p); guardarProgreso(p, profile); pushCloud(p, profile); };
+
+  // Al abrir con cuenta de Google: trae el progreso de la nube (otro dispositivo) y lo une con el local.
+  useEffect(() => {
+    const pr = obtenerPerfil();
+    if (!pr?.uid) return;
+    let off = false;
+    (async () => {
+      try {
+        const cloud = await import('../cloud/cloud');
+        const u = await cloud.authReady();
+        if (!u || u.uid !== pr.uid) { notify('Entra de nuevo con Google para sincronizar.'); return; }
+        const remote = await cloud.loadStudent(u.uid);
+        if (!remote || off) return;
+        const merged = mergeProgress(cargarProgreso(), remote.progress);
+        setProgress(merged); guardarProgreso(merged, pr);
+      } catch { /* sin conexión: se usa el progreso local */ }
+    })();
+    return () => { off = true; };
+  }, []); // eslint-disable-line
+
+  const googleLogin = async (avatar: number, gradeId: number) => {
+    try {
+      const cloud = await import('../cloud/cloud');
+      const u = await cloud.signInStudent();
+      const remote = await cloud.loadStudent(u.uid);
+      const nick = (u.displayName ?? '').trim().split(/\s+/)[0].slice(0, 16) || 'Explorador';
+      const p: Profile = remote ? { nickname: remote.nickname, grade: remote.grade, avatar: remote.avatar, uid: u.uid } : { nickname: nick, grade: gradeId, avatar, uid: u.uid };
+      // El progreso local no se mezcla: el dispositivo puede ser compartido.
+      const pg = remote ? remote.progress : emptyProgress();
+      guardarProgreso(pg, p); setProgress(pg); setProfile(p);
+      if (!remote) await cloud.saveStudent(u, p, pg);
+      sfx('win'); go('home');
+    } catch (e) { notify(cloudError(e)); }
+  };
 
   const register = (nickname: string, avatar: number, gradeId: number) => {
     const p = { nickname, grade: gradeId, avatar };
     guardarProgreso(progress, p); setProfile(p); sfx('win'); go('home');
   };
   const logout = () => {
-    try { localStorage.setItem(CONFIG.storageKey, JSON.stringify({ profile: null, progress })); } catch { /* sin almacenamiento */ }
+    const cloudUser = !!profile?.uid;
+    try { localStorage.setItem(CONFIG.storageKey, JSON.stringify({ profile: null, progress: cloudUser ? emptyProgress() : progress })); } catch { /* sin almacenamiento */ }
+    if (cloudUser) { setProgress(emptyProgress()); import('../cloud/cloud').then(c => c.signOutCloud()).catch(() => {}); }
     setProfile(null); setConfirmExit(false); setTeacher(false); setPageRaw('entry'); history.replaceState(null, '', location.pathname);
   };
 
@@ -137,7 +195,7 @@ export default function App() {
       </header>
 
       <main className={`shell page-${page}`}>
-        {page === 'entry' && !profile && <Entry preview={preview} setPreview={setPreview} onStart={register} notify={notify} />}
+        {page === 'entry' && !profile && <Entry preview={preview} setPreview={setPreview} onStart={register} onGoogle={googleLogin} notify={notify} />}
         {page === 'home' && profile && <Home profile={profile} grade={grade} progress={progress} next={nextTarget} onGo={go} />}
         {page === 'map' && profile && <MapView grade={grade} progress={progress} teacher={teacher} onGo={go} />}
         {page === 'level' && profile && <Suspense fallback={<div className="loading">Cargando laboratorio…</div>}>{levelNode()}</Suspense>}
@@ -145,6 +203,7 @@ export default function App() {
           <Suspense fallback={<div className="loading">Cargando laboratorio…</div>}>
             <BlockGame grade={grade} level={tallerLibre(grade.id)} levelKey={`free.${grade.id}`} label="Taller libre" free dots={{ total: 0, current: -1, done: [] }} teacher={teacher} hasNext={false} onNext={() => {}} onBack={() => go('map')} onComplete={() => {}} />
           </Suspense>)}
+        {page === 'panel' && teacher && <Suspense fallback={<div className="loading">Cargando panel…</div>}><Panel onBack={() => go(profile ? 'home' : 'entry')} /></Suspense>}
         {page === 'exam' && profile && <Quiz key="exam" title="Prueba final" kicker={`Grado ${grade.id} · ${grade.title}`} questions={grade.exam} scoreScale={10}
           onBack={() => go('map')} onFinish={(c, n) => { save({ ...progress, exam: { ...progress.exam, [grade.id]: { score: Math.round((c / n) * 100), medal: c / n >= 0.9 ? 'oro' : c / n >= 0.6 ? 'plata' : 'bronce' } } }); go('map'); notify(`Prueba terminada: ${c} de ${n}.`); }} />}
         {page === 'advanced' && profile && grade.advanced && <Quiz key="adv" title={grade.advanced.title} kicker="Laboratorio extra · sin puntaje" intro={grade.advanced.intro} questions={grade.advanced.questions}
@@ -163,7 +222,7 @@ export default function App() {
       )}
 
       {teacherOpen && <TeacherDialog grade={grade} progress={progress} teacher={teacher} setTeacher={setTeacher} notify={notify} onClose={() => setTeacherOpen(false)}
-        onJump={(g, m, l) => { if (profile && profile.grade !== g) { const p = { ...profile, grade: g }; setProfile(p); guardarProgreso(progress, p); } setTeacherOpen(false); go('level', m, l); }}
+        onPanel={() => { setTeacherOpen(false); go('panel'); }} onJump={(g, m, l) => { if (profile && profile.grade !== g) { const p = { ...profile, grade: g }; setProfile(p); guardarProgreso(progress, p); } setTeacherOpen(false); go('level', m, l); }}
         onReset={() => { save(emptyProgress()); notify('Progreso reiniciado en este dispositivo.'); }} />}
 
       <footer className="foot"><span>IscoLab · laboratorio de pensamiento computacional</span><span>Aprender es probar una idea</span></footer>
@@ -172,8 +231,9 @@ export default function App() {
 }
 
 /* ───────── Entrada ───────── */
-function Entry({ preview, setPreview, onStart, notify }: { preview: number; setPreview: (g: number) => void; onStart: (n: string, a: number, g: number) => void; notify: (s: string) => void }) {
+function Entry({ preview, setPreview, onStart, onGoogle, notify }: { preview: number; setPreview: (g: number) => void; onStart: (n: string, a: number, g: number) => void; onGoogle: (a: number, g: number) => Promise<void>; notify: (s: string) => void }) {
   const [avatar, setAvatar] = useState(0);
+  const [busy, setBusy] = useState(false);
   const [name, setName] = useState('');
   const g = grades[preview - 1], v = worldVisuals[g.id], early = g.id <= 2;
   return (
@@ -199,7 +259,16 @@ function Entry({ preview, setPreview, onStart, notify }: { preview: number; setP
           {avatarNames.map((n, i) => <button type="button" role="radio" aria-checked={avatar === i} key={n} className={avatar === i ? 'on' : ''} onClick={() => { sfx('click'); setAvatar(i); }}><Robot variant={i} size={54} /><small>{n}</small></button>)}
         </div>
         <button className="btn btn-primary btn-lg">Entrar al laboratorio <ArrowRight size={18} /></button>
-        <small className="fine">No pedimos apellidos ni correo. El progreso se guarda en este dispositivo.</small>
+        {preview >= CLOUD.minGrade && (
+          <>
+            <button type="button" className="btn btn-ghost btn-lg" disabled={busy} onClick={async () => { setBusy(true); await onGoogle(avatar, preview); setBusy(false); }}>
+              <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.500 14.500 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.600l7.900-6.100z"/><path fill="#34A853" d="M24 48c6.500 0 12-2.100 16-5.800l-7.500-5.800c-2.100 1.400-4.800 2.300-8.500 2.300-6.300 0-11.600-4.100-13.500-9.800l-7.900 6.100C6.500 42.600 14.600 48 24 48z"/></svg>
+              {busy ? 'Conectando…' : 'Entrar con mi cuenta del colegio'}
+            </button>
+            <small className="fine">Con tu cuenta del colegio tu progreso se guarda en la nube y lo ves desde cualquier dispositivo.</small>
+          </>
+        )}
+        <small className="fine">Sin cuenta, no pedimos apellidos ni correo: el progreso se guarda solo en este dispositivo.</small>
       </form>
     </section>
   );
@@ -321,7 +390,7 @@ function Quiz({ title, kicker, intro, questions, scoreScale, onBack, onFinish }:
 }
 
 /* ───────── Modo docente ───────── */
-function TeacherDialog({ grade, progress, teacher, setTeacher, notify, onClose, onJump, onReset }: { grade: Grade; progress: Progress; teacher: boolean; setTeacher: (v: boolean) => void; notify: (s: string) => void; onClose: () => void; onJump: (g: number, m: number, l: number) => void; onReset: () => void }) {
+function TeacherDialog({ grade, progress, teacher, setTeacher, notify, onClose, onPanel, onJump, onReset }: { grade: Grade; progress: Progress; teacher: boolean; setTeacher: (v: boolean) => void; notify: (s: string) => void; onClose: () => void; onPanel: () => void; onJump: (g: number, m: number, l: number) => void; onReset: () => void }) {
   const [unlocked, setUnlocked] = useState(teacher);
   const [pin, setPin] = useState('');
   const [g, setG] = useState(grade.id), [idx, setIdx] = useState(0);
@@ -350,6 +419,7 @@ function TeacherDialog({ grade, progress, teacher, setTeacher, notify, onClose, 
           </div>
           <div className="dialog-actions vertical">
             <button className="btn btn-primary" onClick={() => onJump(g, flat[idx].mi, flat[idx].li)}>Abrir reto seleccionado <ArrowRight size={16} /></button>
+            <button className="btn btn-ghost" onClick={onPanel}><Eye size={16} /> Panel de estudiantes</button>
             <button className="btn btn-ghost" onClick={() => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.()}><Fullscreen size={16} /> {fs ? 'Salir de pantalla completa' : 'Pantalla completa'}</button>
             <button className="btn btn-ghost" onClick={() => { if (confirm('¿Reiniciar el progreso de este dispositivo?')) onReset(); }}><RotateCcw size={16} /> Reiniciar progreso</button>
             <button className="btn btn-ghost" onClick={() => { setTeacher(false); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); onClose(); }}><DoorOpen size={16} /> Salir del modo docente</button>

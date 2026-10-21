@@ -1,6 +1,7 @@
 import { CONFIG } from '../config';
 
-export type Profile = { nickname: string; grade: number; avatar: number };
+/** uid: cuenta de Google (solo desde 3°); sin uid el progreso vive solo en este dispositivo. */
+export type Profile = { nickname: string; grade: number; avatar: number; uid?: string };
 export type Progress = {
   levels: Record<string, { stars: number }>;
   badges: string[];
@@ -36,3 +37,12 @@ export function guardarProgreso(progress: Progress, profile: Profile | null = ob
 }
 export const levelKey = (g: number, m: number, l: number) => `${g}.${m}.${l}`;
 export { empty as emptyProgress };
+
+/** Une dos progresos de la misma persona: mejor puntuación de cada reto, insignias y pruebas. */
+export function mergeProgress(a: Progress, b: Progress): Progress {
+  const levels = { ...a.levels };
+  Object.entries(b.levels).forEach(([k, v]) => { levels[k] = { stars: Math.max(levels[k]?.stars ?? 0, v.stars) }; });
+  const exam = { ...a.exam };
+  Object.entries(b.exam).forEach(([k, v]) => { if (!exam[+k] || v.score > exam[+k].score) exam[+k] = v; });
+  return { levels, badges: [...new Set([...a.badges, ...b.badges])], exam };
+}
