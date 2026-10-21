@@ -1,11 +1,11 @@
 rules_version = '2';
 // Pega este contenido en Firebase → Firestore Database → Rules → Publish.
-// Cambia DOMINIO-DEL-COLEGIO y la lista de docentes (los mismos valores de CLOUD en src/config.ts).
+// Cambia la lista de docentes (los mismos valores de CLOUD en src/config.ts).
 service cloud.firestore {
   match /databases/{database}/documents {
     function verified() { return request.auth != null && request.auth.token.email_verified == true; }
     function isTeacher() { return verified() && request.auth.token.email.lower() in ['docente1@ejemplo.com']; }
-    function isSchool() { return verified() && request.auth.token.email.lower().matches('.*@DOMINIO-DEL-COLEGIO$'); }
+    function isSchool() { return verified() && request.auth.token.email.lower().matches('.*@gi\\.edu\\.co$'); }
 
     match /students/{uid} {
       allow read: if isTeacher() || (isSchool() && request.auth.uid == uid);
