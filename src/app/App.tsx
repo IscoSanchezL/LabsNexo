@@ -120,6 +120,13 @@ export default function App() {
     try {
       const cloud = await import('../cloud/cloud');
       const u = await cloud.signInStudent();
+      // Un docente que entra por aquí solo prueba la plataforma: no se crea perfil de estudiante ni se guarda en la nube.
+      if (cloud.isTeacherEmail(u.email)) {
+        const t: Profile = { nickname: (u.displayName ?? '').trim().split(/\s+/)[0].slice(0, 16) || 'Docente', grade: gradeId, avatar };
+        guardarProgreso(emptyProgress(), t); setProgress(emptyProgress()); setProfile(t);
+        await cloud.signOutCloud(); sfx('win'); go('home'); notify('Entraste como docente: tu avance no se guarda en la nube.');
+        return;
+      }
       const remote = await cloud.loadStudent(u.uid);
       const nick = (u.displayName ?? '').trim().split(/\s+/)[0].slice(0, 16) || 'Explorador';
       const p: Profile = remote ? { nickname: remote.nickname, grade: remote.grade, avatar: remote.avatar, uid: u.uid } : { nickname: nick, grade: gradeId, avatar, uid: u.uid };
@@ -128,6 +135,7 @@ export default function App() {
       guardarProgreso(pg, p); setProgress(pg); setProfile(p);
       if (!remote) await cloud.saveStudent(u, p, pg);
       sfx('win'); go('home');
+      if (remote && remote.grade !== gradeId) notify(`Tu cuenta ya estaba en ${remote.grade}°. Si es un error, pídele a tu profe que lo cambie.`);
     } catch (e) { notify(cloudError(e)); }
   };
 

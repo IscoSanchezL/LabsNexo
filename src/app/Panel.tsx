@@ -40,7 +40,7 @@ export default function Panel({ onBack }: { onBack: () => void }) {
 
   const load = async (c: Cloud) => {
     setBusy(true); setMsg('');
-    try { setRows((await c.listStudents()).sort((a, b) => a.grade - b.grade || a.nickname.localeCompare(b.nickname, 'es'))); }
+    try { setRows((await c.listStudents()).filter(r => !c.isTeacherEmail(r.email)).sort((a, b) => a.grade - b.grade || a.nickname.localeCompare(b.nickname, 'es'))); }
     catch { setMsg('No se pudo leer el progreso. Revisa las reglas de Firestore y tu conexión.'); }
     setBusy(false);
   };
