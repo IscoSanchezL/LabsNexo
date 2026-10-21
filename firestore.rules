@@ -4,7 +4,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function verified() { return request.auth != null && request.auth.token.email_verified == true; }
-    function isTeacher() { return verified() && request.auth.token.email.lower() in ['docente1@ejemplo.com']; }
+    function isTeacher() { return verified() && request.auth.token.email.lower() in ['franciscos@gi.edu.co']; }
     function isSchool() { return verified() && request.auth.token.email.lower().matches('.*@gi\\.edu\\.co$'); }
 
     match /students/{uid} {

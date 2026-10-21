@@ -9,7 +9,7 @@ export const CONFIG={teacherPin:'1234',storageKey:'iscolab.profile.v2',legacyKey
 export const CLOUD = {
   minGrade: 3,
   schoolDomain: 'gi.edu.co',
-  teachers: [] as string[],
+  teachers: ['franciscos@gi.edu.co'],
   firebase: {
     apiKey: 'AIzaSyDZQ4ZUpM-1V1JzMZ_QXWQRK8qCBm2sRMw',
     authDomain: 'labsnexo-ba465.firebaseapp.com',
