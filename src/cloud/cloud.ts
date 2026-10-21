@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
-import { collection, doc, getDoc, getDocs, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
 import { CLOUD } from '../config';
 import { emptyProgress, type Profile, type Progress } from '../app/store';
 
@@ -12,7 +12,9 @@ export type CloudStudent = { uid: string; email: string; name: string; nickname:
 
 const lower = (s: string | null | undefined) => (s ?? '').trim().toLowerCase();
 export const isSchoolEmail = (e: string | null | undefined) => lower(e).endsWith(`@${CLOUD.schoolDomain.toLowerCase()}`);
-export const isTeacherEmail = (e: string | null | undefined) => CLOUD.teachers.map(lower).includes(lower(e));
+export const isAdminEmail = (e: string | null | undefined) => CLOUD.admins.map(lower).includes(lower(e));
+/** Los administradores también pueden usar el panel de docentes. */
+export const isTeacherEmail = (e: string | null | undefined) => CLOUD.teachers.map(lower).includes(lower(e)) || isAdminEmail(e);
 
 export function authReady(): Promise<User | null> {
   return new Promise(res => { const off = onAuthStateChanged(auth, u => { off(); res(u); }); });
@@ -63,3 +65,13 @@ export async function listStudents(): Promise<CloudStudent[]> {
   const snap = await getDocs(collection(db, 'students'));
   return snap.docs.map(d => toStudent(d.id, d.data()));
 }
+
+/** Solo administradores: borra todo el progreso de un estudiante (conserva su cuenta). */
+export async function resetStudent(s: CloudStudent) {
+  await setDoc(doc(db, 'students', s.uid), {
+    email: s.email, name: s.name, nickname: s.nickname, avatar: s.avatar, grade: s.grade,
+    levels: {}, badges: [], exam: {}, updatedAt: serverTimestamp(),
+  });
+}
+/** Solo administradores: elimina el registro completo del estudiante. */
+export const deleteStudent = (uid: string) => deleteDoc(doc(db, 'students', uid));

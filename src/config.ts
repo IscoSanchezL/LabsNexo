@@ -10,6 +10,8 @@ export const CLOUD = {
   minGrade: 3,
   schoolDomain: 'gi.edu.co',
   teachers: ['franciscos@gi.edu.co'],
+  /** Administradores: ven y gestionan todo (panel, reiniciar y eliminar estudiantes). Pueden ser cuentas personales. */
+  admins: ['franksanlo@gmail.com'],
   firebase: {
     apiKey: 'AIzaSyDZQ4ZUpM-1V1JzMZ_QXWQRK8qCBm2sRMw',
     authDomain: 'labsnexo-ba465.firebaseapp.com',

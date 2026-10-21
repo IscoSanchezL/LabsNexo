@@ -58,6 +58,8 @@ const es = {
   'panel.region': 'Progreso de estudiantes', 'panel.thGrade': 'Grado', 'panel.thStudent': 'Estudiante', 'panel.thLevels': 'Retos', 'panel.thBadges': 'Insignias', 'panel.thExam': 'Prueba', 'panel.thLast': 'Última vez',
   'panel.loading': 'Cargando…', 'panel.readFail': 'No se pudo leer el progreso. Revisa las reglas de Firestore y tu conexión.',
   'panel.notTeacher': 'Ese correo no está en la lista de docentes.', 'panel.loginFail': 'No se pudo iniciar sesión con Google.',
+  'panel.thActions': 'Acciones', 'panel.reset': 'Reiniciar', 'panel.delete': 'Eliminar',
+  'panel.confirmReset': '¿Borrar TODO el progreso de {n}? La cuenta se conserva.', 'panel.confirmDelete': '¿Eliminar el registro completo de {n}? No se puede deshacer.', 'panel.actionFail': 'No se pudo completar la acción.',
   'csv.grade': 'Grado', 'csv.nick': 'Apodo', 'csv.name': 'Nombre', 'csv.email': 'Correo', 'csv.done': 'Retos completados', 'csv.total': 'Retos del grado', 'csv.stars': 'Estrellas', 'csv.badges': 'Insignias', 'csv.exam': 'Prueba final', 'csv.last': 'Última actividad', 'csv.keys': 'Retos hechos', 'csv.file': 'progreso-labsnexo',
   // Juego con bloques
   'bg.fixError': ' · ARREGLA EL ERROR', 'bg.levelsAria': 'Retos del módulo', 'bg.mazeAria': 'Laberinto del robot', 'bg.canvasAria': 'Lienzo de la tortuga', 'bg.ghost': 'Dibujo fantasma',
@@ -141,6 +143,8 @@ const en: Record<UiKey, string> = {
   'panel.region': 'Student progress', 'panel.thGrade': 'Grade', 'panel.thStudent': 'Student', 'panel.thLevels': 'Challenges', 'panel.thBadges': 'Badges', 'panel.thExam': 'Test', 'panel.thLast': 'Last seen',
   'panel.loading': 'Loading…', 'panel.readFail': 'Could not read the progress. Check the Firestore rules and your connection.',
   'panel.notTeacher': 'That email is not on the teacher list.', 'panel.loginFail': 'Could not sign in with Google.',
+  'panel.thActions': 'Actions', 'panel.reset': 'Reset', 'panel.delete': 'Delete',
+  'panel.confirmReset': 'Erase ALL progress for {n}? The account is kept.', 'panel.confirmDelete': 'Delete the whole record for {n}? This cannot be undone.', 'panel.actionFail': 'Could not complete the action.',
   'csv.grade': 'Grade', 'csv.nick': 'Nickname', 'csv.name': 'Name', 'csv.email': 'Email', 'csv.done': 'Challenges completed', 'csv.total': 'Challenges in grade', 'csv.stars': 'Stars', 'csv.badges': 'Badges', 'csv.exam': 'Final test', 'csv.last': 'Last activity', 'csv.keys': 'Challenges done', 'csv.file': 'labsnexo-progress',
   'bg.fixError': ' · FIX THE BUG', 'bg.levelsAria': 'Challenges in this module', 'bg.mazeAria': 'Robot maze', 'bg.canvasAria': 'Turtle canvas', 'bg.ghost': 'Ghost drawing',
   'bg.starsAria': '{s} of 3 stars', 'bg.win': 'You did it!', 'bg.winPar': 'You used {u} blocks · the shortest way uses {p}', 'bg.winUsed': 'You used {u} blocks',

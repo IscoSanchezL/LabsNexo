@@ -39,6 +39,7 @@ export default function Panel({ onBack }: { onBack: () => void }) {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [ok, setOk] = useState(false);
+  const [admin, setAdmin] = useState(false);
 
   const load = async (c: Cloud) => {
     setBusy(true); setMsg('');
@@ -50,7 +51,7 @@ export default function Panel({ onBack }: { onBack: () => void }) {
     import('../cloud/cloud').then(async c => {
       setCloud(c);
       const u = await c.authReady();
-      if (u && c.isTeacherEmail(u.email)) { setOk(true); load(c); }
+      if (u && c.isTeacherEmail(u.email)) { setOk(true); setAdmin(c.isAdminEmail(u.email)); load(c); }
     });
   }, []); // eslint-disable-line
   // Al salir se cierra la sesión del docente, para no dejarla abierta en un equipo de estudiantes.
@@ -58,8 +59,14 @@ export default function Panel({ onBack }: { onBack: () => void }) {
 
   const signIn = async () => {
     if (!cloud) return;
-    try { await cloud.signInTeacher(); setOk(true); load(cloud); }
+    try { const u = await cloud.signInTeacher(); setOk(true); setAdmin(cloud.isAdminEmail(u.email)); load(cloud); }
     catch (e) { setMsg(String((e as Error).message).includes('not-teacher') ? t('panel.notTeacher') : t('panel.loginFail')); }
+  };
+
+  const act = async (s: CloudStudent, kind: 'reset' | 'delete') => {
+    if (!cloud || !confirm(t(kind === 'reset' ? 'panel.confirmReset' : 'panel.confirmDelete', { n: `${s.nickname} (${s.email})` }))) return;
+    try { await (kind === 'reset' ? cloud.resetStudent(s) : cloud.deleteStudent(s.uid)); await load(cloud); }
+    catch { setMsg(t('panel.actionFail')); }
   };
 
   const shown = useMemo(() => (rows ?? []).filter(r => !grade || r.grade === grade), [rows, grade]);
@@ -98,13 +105,13 @@ export default function Panel({ onBack }: { onBack: () => void }) {
           {shown.length > 0 && (
             <div className="panel-table" role="region" aria-label={t('panel.region')} tabIndex={0}>
               <table>
-                <thead><tr><th>{t('panel.thGrade')}</th><th>{t('panel.thStudent')}</th><th>{t('panel.thLevels')}</th><th>★</th><th>{t('panel.thBadges')}</th><th>{t('panel.thExam')}</th><th>{t('panel.thLast')}</th></tr></thead>
+                <thead><tr><th>{t('panel.thGrade')}</th><th>{t('panel.thStudent')}</th><th>{t('panel.thLevels')}</th><th>★</th><th>{t('panel.thBadges')}</th><th>{t('panel.thExam')}</th><th>{t('panel.thLast')}</th>{admin && <th>{t('panel.thActions')}</th>}</tr></thead>
                 <tbody>{shown.map(s => { const x = stat(s); return (
                   <tr key={s.uid}>
                     <td>{s.grade}°</td>
                     <td><b>{s.nickname}</b><small>{s.name} · {s.email}</small></td>
                     <td><span className="bar"><span style={{ width: `${x.total ? (x.done / x.total) * 100 : 0}%` }} /></span>{x.done}/{x.total}</td>
-                    <td>{x.stars}</td><td>{x.badges}</td><td>{x.exam ?? '—'}</td><td>{date(s.updatedAt)}</td>
+                    <td>{x.stars}</td><td>{x.badges}</td><td>{x.exam ?? '—'}</td><td>{date(s.updatedAt)}</td>{admin && <td><button className="btn btn-ghost" onClick={() => act(s, 'reset')}>{t('panel.reset')}</button> <button className="btn btn-ghost" onClick={() => act(s, 'delete')}>{t('panel.delete')}</button></td>}
                   </tr>); })}</tbody>
               </table>
             </div>

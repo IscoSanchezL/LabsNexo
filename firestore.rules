@@ -1,10 +1,11 @@
 rules_version = '2';
 // Pega este contenido en Firebase → Firestore Database → Rules → Publish.
-// Cambia la lista de docentes (los mismos valores de CLOUD en src/config.ts).
+// Los correos de docentes y administradores son los mismos de CLOUD en src/config.ts.
 service cloud.firestore {
   match /databases/{database}/documents {
     function verified() { return request.auth != null && request.auth.token.email_verified == true; }
-    function isTeacher() { return verified() && request.auth.token.email.lower() in ['franciscos@gi.edu.co']; }
+    function isAdmin() { return verified() && request.auth.token.email.lower() in ['franksanlo@gmail.com']; }
+    function isTeacher() { return isAdmin() || (verified() && request.auth.token.email.lower() in ['franciscos@gi.edu.co']); }
     function isSchool() { return verified() && request.auth.token.email.lower().matches('.*@gi\\.edu\\.co$'); }
 
     match /students/{uid} {
@@ -14,6 +15,7 @@ service cloud.firestore {
         && request.resource.data.email.lower() == request.auth.token.email.lower()
         && request.resource.data.grade is int && request.resource.data.grade >= 3 && request.resource.data.grade <= 6
         && request.resource.data.nickname is string && request.resource.data.nickname.size() <= 16;
+      allow write: if isAdmin();
       allow delete: if isTeacher();
     }
   }
