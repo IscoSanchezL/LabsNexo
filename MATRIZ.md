@@ -96,3 +96,17 @@ La mecánica cambia entre grados y cada fila corresponde a un nivel de los archi
 | 6° | Python y seguridad | 5 · Mensaje sospechoso | decidir ante enlace | Detección de phishing |
 
 **Verificación:** 18 módulos, 5 niveles por módulo y mecánicas escalonadas por grado. Cada módulo aborda una familia conceptual propia dentro de la ruta de su grado; no se reutiliza el mismo conjunto de retos entre grados.
+
+## Retos extra con bloques (`src/data/retos-extra.ts`)
+
+Se añaden al final de cada grado. Todos tienen solución verificada con `npm run test:retos`.
+
+| Grado | Módulo | Retos | Concepto |
+|---|---|---:|---|
+| 1° | Estrellas en el camino | 5 | Recoger al pasar, contar casillas, giros |
+| 1° | Giros y caminos | 5 | Izquierda y derecha, dirección inicial |
+| 2° | Bucles con estrellas | 5 | Repetir una acción o un grupo de bloques |
+| 3° | Figuras con bucles | 5 | Polígonos, 360 ÷ lados, grupos que se repiten |
+| 4° | Variables en acción | 5 | Variables de tamaño, depuración, cambiar el valor |
+| 5° | Más funciones | 5 | Definir, depurar y combinar funciones |
+| 6° | Patrones anidados | 5 | Bucle dentro de bucle, lápiz arriba y abajo |

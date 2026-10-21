@@ -8,12 +8,12 @@
 import { call, chg, fd, ifp, left, move, pen, prog, repeat, right, rotL, rotR, setv, until, vr } from '../play/ast';
 import type { Level, Module, Tool } from '../types';
 
-const BASIC: Tool[] = ['move', 'turnL', 'turnR'];
-const LOOPS: Tool[] = [...BASIC, 'repeat'];
-const DRAW: Tool[] = ['fd', 'rotL', 'rotR', 'repeat'];
+export const BASIC: Tool[] = ['move', 'turnL', 'turnR'];
+export const LOOPS: Tool[] = [...BASIC, 'repeat'];
+export const DRAW: Tool[] = ['fd', 'rotL', 'rotR', 'repeat'];
 
-const maze = (o: Omit<Level, 'mechanic'>): Level => ({ mechanic: 'maze', ...o });
-const turtle = (o: Omit<Level, 'mechanic'>): Level => ({ mechanic: 'turtle', ...o });
+export const maze = (o: Omit<Level, 'mechanic'>): Level => ({ mechanic: 'maze', ...o });
+export const turtle = (o: Omit<Level, 'mechanic'>): Level => ({ mechanic: 'turtle', ...o });
 
 // ───────────────────────── 1.° · Robot de paseo ─────────────────────────
 export const g1Robot: Module = {
@@ -277,7 +277,7 @@ export const g4Condiciones: Module = {
 };
 
 // ───────────────────────── 4.° · Variables en cajas ─────────────────────────
-const VARS: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'vars'];
+export const VARS: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'vars'];
 export const g4Variables: Module = {
   title: 'Variables en cajas',
   intro: 'Una variable es una caja con nombre que guarda un número. Cámbialo y todo el dibujo cambia.',
@@ -317,9 +317,9 @@ export const g4Variables: Module = {
 };
 
 // ───────────────────────── 5.° · Funciones propias ─────────────────────────
-const FUN: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'proc', 'color'];
-const cuadrado = (lado: number) => [repeat(4, fd(lado), rotR(90))];
-const triangulo = (lado: number) => [repeat(3, fd(lado), rotR(120))];
+export const FUN: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'proc', 'color'];
+export const cuadrado = (lado: number) => [repeat(4, fd(lado), rotR(90))];
+export const triangulo = (lado: number) => [repeat(3, fd(lado), rotR(120))];
 export const g5Funciones: Module = {
   title: 'Funciones propias',
   intro: 'Una función es un bloque que tú inventas: lo defines una vez y lo usas cuando quieras.',
@@ -361,7 +361,7 @@ export const g5Funciones: Module = {
 };
 
 // ───────────────────────── 6.° · Bucles anidados ─────────────────────────
-const NEST: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'pen', 'color'];
+export const NEST: Tool[] = ['fd', 'rotL', 'rotR', 'repeat', 'pen', 'color'];
 export const g6Anidados: Module = {
   title: 'Bucles anidados',
   intro: 'Un bucle dentro de otro bucle: así se crean dibujos que parecen magia.',
