@@ -56,7 +56,7 @@ for (const g of grades) {
 // ───────── Inglés: traducciones completas y soluciones intactas ─────────
 const SPANISH = /[áéíóúñ¿¡ÁÉÍÓÚÑ]|\b(el|la|los|las|de|del|que|con|para|una|un|hacer|avanzar|girar)\b/;
 const textOf = (l: Level) => [l.title, l.prompt, l.concept, ...l.hint, ...(l.options ?? []), l.answer ?? '', l.solution ?? ''];
-for (const g of grades) {
+for (const g of process.env.SKIP_EN ? [] : grades) {
   const en = localizeGrade(g, 'en');
   if (en === g) { fail(`en ${g.id}°`, 'sin traducción al inglés'); continue; }
   if (SPANISH.test(en.title + en.world)) fail(`en ${g.id}°`, 'título o mundo sin traducir');
@@ -87,6 +87,7 @@ for (const g of grades) {
     });
   });
 }
+if (!process.env.SKIP_EN) {
 const ks = (o: Record<string, string>) => Object.keys(o).sort().join('|');
 if (ks(uiDictionaries.es) !== ks(uiDictionaries.en)) fail('interfaz', 'es y en no tienen las mismas claves');
 for (const k of Object.keys(uiDictionaries.es) as (keyof typeof uiDictionaries.es)[]) {
@@ -94,5 +95,6 @@ for (const k of Object.keys(uiDictionaries.es) as (keyof typeof uiDictionaries.e
   if (ph(uiDictionaries.es[k]) !== ph(uiDictionaries.en[k])) fail(`interfaz ${k}`, 'los marcadores {…} no coinciden');
   if (SPANISH.test(uiDictionaries.en[k]) && !/^(blk|py)\./.test(k)) fail(`interfaz ${k}`, 'texto en español en la versión inglesa');
 }
-console.log(bad ? `\n${bad} problema(s) en ${total} comprobaciones.` : `\n✓ ${total / 2} retos con bloques, en español e inglés: todas las soluciones funcionan.`);
+}
+console.log(bad ? `\n${bad} problema(s) en ${total} comprobaciones.` : process.env.SKIP_EN ? `\n✓ ${total} retos (solo español).` : `\n✓ ${total / 2} retos con bloques, en español e inglés: todas las soluciones funcionan.`);
 process.exit(bad ? 1 : 0);

@@ -4,6 +4,7 @@ import { LANG, type Lang } from './index';
 import { en1 } from './en/g1'; import { en2 } from './en/g2'; import { en3 } from './en/g3';
 import { en4 } from './en/g4'; import { en5 } from './en/g5'; import { en6 } from './en/g6';
 import { enWorkshop } from './en/workshop';
+import { enExtra2 } from './en/extra2';
 
 /** Textos de un reto en otro idioma. Los campos opcionales solo se indican si cambian (opciones, respuesta…). */
 export type LevelText = {
@@ -19,12 +20,17 @@ export type GradeText = {
   advanced?: { title: string; intro: string; questions: QuizQuestion[] };
 };
 
-export const EN: Record<number, GradeText> = { 1: en1, 2: en2, 3: en3, 4: en4, 5: en5, 6: en6 };
+const BASE: Record<number, GradeText> = { 1: en1, 2: en2, 3: en3, 4: en4, 5: en5, 6: en6 };
+/** Cada grado con sus módulos base y los extra. */
+export const EN: Record<number, GradeText> = Object.fromEntries(
+  Object.entries(BASE).map(([id, g]) => [id, { ...g, modules: { ...g.modules, ...(enExtra2[+id] ?? {}) } }]),
+);
 
 /** Nombres de variables y funciones que ve el estudiante en los bloques. */
 const NAMES: Record<string, string> = {
   lado: 'side', angulo: 'angle', ancho: 'width', alto: 'height', paso: 'step',
   cuadrado: 'square', triangulo: 'triangle', linea: 'line', hexagono: 'hexagon', molino: 'windmill',
+  escalon: 'stair', sube: 'climb', baja: 'descend', punta: 'point', estrella: 'star', torre: 'tower', largo: 'length',
 };
 const rn = (n: string) => NAMES[n] ?? n;
 const rExpr = (e: Expr): Expr => e.k === 'var' ? { ...e, name: rn(e.name) } : e.k === 'bin' ? { ...e, a: rExpr(e.a), b: rExpr(e.b) } : e;

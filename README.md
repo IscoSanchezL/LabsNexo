@@ -8,13 +8,13 @@ binario y lógica, prueba final por grado, zona avanzada, taller libre y modo do
 ```
 npm install
 npm run dev          # servidor local
-npm run test:retos   # comprueba que los 85 retos con bloques se pueden resolver
+npm run test:retos   # comprueba que los 145 retos con bloques se pueden resolver
 npm run build        # genera docs/
 ```
 
 ## Estructura
 - `src/play/`: motor (AST, ejecutor, laberinto, tortuga), bloques Blockly, escenarios canvas y pantalla `BlockGame`.
-- `src/data/retos.ts` y `src/data/retos-extra.ts`: retos con bloques (cada uno con solución, pistas y bloques mínimos). Los extra se añaden al final de cada grado para no alterar el progreso guardado.
+- `src/data/retos.ts`, `src/data/retos-extra.ts` y `src/data/retos-extra2.ts`: retos con bloques (cada uno con solución, pistas y bloques mínimos). Los extra se añaden al final de cada grado para no alterar el progreso guardado.
 - `src/data/grados/`: módulos clásicos, pruebas finales y zonas avanzadas.
 - `src/app/`: aplicación (entrada, inicio, mapa, pruebas, modo docente), retos clásicos, audio y almacenamiento.
 

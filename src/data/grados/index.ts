@@ -5,6 +5,10 @@ import {
   g4Condiciones, g4Variables, g5Funciones, g6Anidados,
 } from '../retos';
 import { g1Estrellas, g1Giros, g2Bucles, g3Figuras, g4VariablesAccion, g5MasFunciones, g6Patrones } from '../retos-extra';
+import {
+  g1Arregla, g1Dibujos, g2MasBucles, g2Dibujos, g3Laberintos, g3Errores, g4Decisiones, g4Cambian,
+  g5FuncLaberinto, g5Dibujos, g6Algoritmos, g6Espirografos,
+} from '../retos-extra2';
 import { g1 } from './g1'; import { g2 } from './g2'; import { g3 } from './g3';
 import { g4 } from './g4'; import { g5 } from './g5'; import { g6 } from './g6';
 
@@ -21,10 +25,10 @@ function upgrade(g: Grade, replace: Record<number, Module>, extra: Module[] = []
 }
 
 export const grades: Grade[] = [
-  upgrade(g1, { 2: g1Robot }, [g1Estrellas, g1Giros]),
-  upgrade(g2, { 1: g2Rocas, 2: g2Detectives }, [g2Bucles]),
-  upgrade(g3, { 0: g3Bucles, 1: g3Depuracion, 2: g3Tortuga }, [g3Figuras]),
-  upgrade(g4, { 0: g4Condiciones, 1: g4Variables }, [g4VariablesAccion]),
-  upgrade(g5, { 0: g5Funciones }, [g5MasFunciones]),
-  upgrade(g6, { 0: g6Anidados }, [g6Patrones]),
+  upgrade(g1, { 2: g1Robot }, [g1Estrellas, g1Giros, g1Arregla, g1Dibujos]),
+  upgrade(g2, { 1: g2Rocas, 2: g2Detectives }, [g2Bucles, g2MasBucles, g2Dibujos]),
+  upgrade(g3, { 0: g3Bucles, 1: g3Depuracion, 2: g3Tortuga }, [g3Figuras, g3Laberintos, g3Errores]),
+  upgrade(g4, { 0: g4Condiciones, 1: g4Variables }, [g4VariablesAccion, g4Decisiones, g4Cambian]),
+  upgrade(g5, { 0: g5Funciones }, [g5MasFunciones, g5FuncLaberinto, g5Dibujos]),
+  upgrade(g6, { 0: g6Anidados }, [g6Patrones, g6Algoritmos, g6Espirografos]),
 ];

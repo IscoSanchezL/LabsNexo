@@ -177,12 +177,13 @@ export function programToXml(p: Program, vars: string[] = []): string {
   let y = 24;
   const defs = Object.entries(p.defs).map(([name, body]) => {
     const x = `<block type="procedures_defnoreturn" x="${Math.max(24, 300)}" y="${y}"><field name="NAME">${esc(name)}</field>${sub('STACK', body)}</block>`;
-    y += 40 + 62 * Math.max(1, countStmts(body));
+    y += 90 + heightOf(body);
     return x;
   });
   return `<xml xmlns="https://developers.google.com/blockly/xml">${varXml}${hat}${defs.join('')}</xml>`;
 }
-const countStmts = (l: Stmt[]): number => l.reduce((n, s) => n + 1 + (s.t === 'repeat' || s.t === 'until' ? countStmts(s.body) : s.t === 'if' ? countStmts(s.then) + countStmts(s.else ?? []) : 0), 0);
+/** Altura aproximada (px) de una pila de bloques, para que las definiciones no se monten unas sobre otras. */
+const heightOf = (l: Stmt[]): number => Math.max(48, l.reduce((n, st) => n + 54 + (st.t === 'repeat' || st.t === 'until' ? 40 + heightOf(st.body) : st.t === 'if' ? 40 + heightOf(st.then) + (st.else ? 40 + heightOf(st.else) : 0) : 0), 0));
 
 // ───────────────────────── Bloques → AST ─────────────────────────
 type B = Blockly.Block;

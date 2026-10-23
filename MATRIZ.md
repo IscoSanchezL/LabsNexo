@@ -110,3 +110,24 @@ Se añaden al final de cada grado. Todos tienen solución verificada con `npm ru
 | 4° | Variables en acción | 5 | Variables de tamaño, depuración, cambiar el valor |
 | 5° | Más funciones | 5 | Definir, depurar y combinar funciones |
 | 6° | Patrones anidados | 5 | Bucle dentro de bucle, lápiz arriba y abajo |
+
+## Segundo lote de retos extra (`src/data/retos-extra2.ts`)
+
+Se añaden al final de cada grado (no cambian las claves del progreso guardado). Traducción en `src/i18n/en/extra2.ts`.
+
+| Grado | Módulo | Retos | Concepto |
+|---|---|---:|---|
+| 1° | Arregla al robot | 5 | Depurar: pasos, giros, orden y estrellas |
+| 1° | Primeros dibujos | 5 | Tortuga sin bucles: líneas, L, T, escalera, cuadrado |
+| 2° | Más bucles | 5 | Repetir pasos y grupos, recoger estrellas |
+| 2° | Dibujos que se repiten | 5 | Bucles con lápiz y color: línea punteada, cruz, rombo |
+| 3° | Laberintos con bucles | 5 | Bucles y «repetir hasta la meta» en caminos largos |
+| 3° | Caza de errores | 5 | Depurar bucles: dirección, orden, conteo |
+| 4° | Decisiones en laberintos | 5 | Regla de la mano derecha e izquierda con si / si no |
+| 4° | Variables que cambian | 5 | Variables que crecen, varias cajas, depuración |
+| 5° | Funciones en el laberinto | 5 | Definir y llamar funciones con el robot |
+| 5° | Dibujos con funciones | 5 | Funciones que usan funciones, lápiz y bucles |
+| 6° | Algoritmos de laberinto | 5 | Laberintos grandes, estrellas y programas cortos |
+| 6° | Espirógrafos | 5 | Bucles anidados, arcos, variables y estrellas |
+
+Los laberintos nuevos son árboles generados sin ciclos, de modo que la regla de la mano siempre llega a la meta.
